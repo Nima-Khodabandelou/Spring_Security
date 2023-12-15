@@ -24,6 +24,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    public static UserBuilder builder() {
+        return new UserBuilder();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -62,16 +66,13 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Integer id, String firstName, String lastName, String email, String password) {
+    public User(Integer id, String firstName, String lastName, String email, String password, Role role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-    }
-
-    public static UserBuilder builder() {
-        return new UserBuilder();
+        this.role = role;
     }
 
     public Integer getId() {
@@ -111,6 +112,13 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     protected boolean canEqual(final Object other) {
         return other instanceof User;
@@ -140,6 +148,7 @@ public class User implements UserDetails {
         private String lastName;
         private String email;
         private String password;
+        private Role role;
 
         UserBuilder() {
         }
@@ -169,12 +178,17 @@ public class User implements UserDetails {
             return this;
         }
 
+        public UserBuilder role(Role role) {
+            this.role = role;
+            return this;
+        }
+
         public User build() {
-            return new User(id, firstName, lastName, email, password);
+            return new User(id, firstName, lastName, email, password, role);
         }
 
         public String toString() {
-            return "User.UserBuilder(id=" + this.id + ", firstName=" + this.firstName + ", lastName=" + this.lastName + ", email=" + this.email + ", password=" + this.password + ")";
+            return "User.UserBuilder(id=" + this.id + ", firstName=" + this.firstName + ", lastName=" + this.lastName + ", email=" + this.email + ", password=" + this.password + ", role=" + this.role + ")";
         }
     }
 }
